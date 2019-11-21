@@ -6,57 +6,159 @@ import './styles.css';
 $(document).ready(function()
 {
 
-  $("#inputform").submit(function(event)
+  $("#formID").submit(function(event)
   {
-  event.preventDefault();
+    event.preventDefault();
 
-  let color = "Blue";
-  let year = null;
-  // let city = $("").val();
-  let output = "";
+    let city = $("#cityID").val();
+    let color = $("#colorID").val();
+    let year = $("#yearID").val();
+    let year2;
 
-  let request = new XMLHttpRequest();
-  const url = `https://CORS-anywhere.herokuapp.com/bikeindex.org:443/api/v3/search?page=5&per_page=25&stolenness=stolen&access_token=fa68d0976430ee4f1dfef840895dc56d4c48f571f5eccb56e74077d23b9d0695`;
 
-  request.onreadystatechange = function()
-  {
-    if (this.readyState === 4 && this.status === 200)
-    {
-      const response = JSON.parse(this.responseText);
-      // console.log(response.bikes[24]);
-
-      for(let i = 0; i< response.bikes.length; i++)
+      if (year !== "null" && year!=='')
       {
-        // console.log(response.bikes[i].frame_colors[]);
-        for(let j = 0; j< response.bikes[i].frame_colors.length; j++)
-        {
+        year2 = parseInt(year);
+        year = year2;
+      }
+      else
+      {
+        year=null;
+      }
 
-           //console.log(response.bikes[i].frame_colors[j]);
-          // console.log(response.bikes[i].frame_colors);
-           if (response.bikes[i].frame_colors[j] === color && response.bikes[i].year === year)
-           {
-              output += JSON.stringify("Date Stolen: "+response.bikes[i].date_stolen+
-                                       "; Description: "+response.bikes[i].description +
-                                       "; Color: "+response.bikes[i].frame_colors+
-                                       "; Manufacturer: "+response.bikes[i].manufacturer_name+
-                                       "; Year: " + response.bikes[i].year)+ "<br>";
 
+
+    let output = "";
+    let results=0;
+    console.log("THIS IS " + year);
+    let request = new XMLHttpRequest();
+    const url = `https://CORS-anywhere.herokuapp.com/bikeindex.org:443/api/v3/search?page=1&per_page=25&stolenness=stolen`;
+
+    request.onreadystatechange = function()
+    {
+      if (this.readyState === 4 && this.status === 200)
+      {
+        const response = JSON.parse(this.responseText);
+        for(let i = 0; i< response.bikes.length; i++)
+        {  //loop goes through all bikes
+
+          for(let j = 0; j< response.bikes[i].frame_colors.length; j++)     //loop goes through each bike's color
+          {
+
+
+
+            //*---------------------------------*
+            if(year!=''&& color!==''&& city!=='')
+            {
+             if (response.bikes[i].frame_colors[j] === color && response.bikes[i].year === year  && response.bikes[i].stolen_location === city)
+             {
+                output += JSON.stringify("Date Stolen: "+response.bikes[i].date_stolen+
+                                         "; Description: "+response.bikes[i].description +
+                                         "; Color: "+response.bikes[i].frame_colors+
+                                         "; City Stolen: "+response.bikes[i].stolen_location+
+                                         "; Manufacturer: "+response.bikes[i].manufacturer_name+
+                                         "; Year: " + response.bikes[i].year)+ "<br>";
+                results += 1;
+             }
+           }
+             if(color!==' ' && !year && city!==' ')
+             {
+                 if (response.bikes[i].frame_colors[j] === color && response.bikes[i].stolen_location === city)
+                 {
+                   output += JSON.stringify("Date Stolen: "+response.bikes[i].date_stolen+
+                                            "; Description: "+response.bikes[i].description +
+                                            "; Color: "+response.bikes[i].frame_colors+
+                                            "; City Stolen: "+response.bikes[i].stolen_location+
+                                            "; Manufacturer: "+response.bikes[i].manufacturer_name+
+                                            "; Year: " + response.bikes[i].year)+ "<br>";
+                    results += 1;
+                 }
+               }
+
+
+             if(color!==' ' && year!==' ' && !city)
+             {
+                 if (response.bikes[i].frame_colors[j] === color && response.bikes[i].year === year)
+                 {
+                   output += JSON.stringify("Date Stolen: "+response.bikes[i].date_stolen+
+                                            "; Description: "+response.bikes[i].description +
+                                            "; Color: "+response.bikes[i].frame_colors+
+                                            "; City Stolen: "+response.bikes[i].stolen_location+
+                                            "; Manufacturer: "+response.bikes[i].manufacturer_name+
+                                            "; Year: " + response.bikes[i].year)+ "<br>";
+                  results += 1;
+                 }
+               }
+
+
+
+
+             if(color!==' ' && !year && !city)
+             {
+                   if (response.bikes[i].frame_colors[j] === color)
+                   {
+                     output += JSON.stringify("Date Stolen: "+response.bikes[i].date_stolen+
+                                              "; Description: "+response.bikes[i].description +
+                                              "; Color: "+response.bikes[i].frame_colors+
+                                              "; City Stolen: "+response.bikes[i].stolen_location+
+                                              "; Manufacturer: "+response.bikes[i].manufacturer_name+
+                                              "; Year: " + response.bikes[i].year)+ "<br>"+"<br>";
+                    results += 1;
+                   }
+            }
+
+
+
+
+
+            if(!color && year!==' ' && !city)
+            {
+                  if (response.bikes[i].year === year)
+                  {
+                    output += JSON.stringify("Date Stolen: "+response.bikes[i].date_stolen+
+                                             "; Description: "+response.bikes[i].description +
+                                             "; Color: "+response.bikes[i].frame_colors+
+                                             "; City Stolen: "+response.bikes[i].stolen_location+
+                                             "; Manufacturer: "+response.bikes[i].manufacturer_name+
+                                             "; Year: " + response.bikes[i].year)+ "<br>"+"<br>";
+                    results += 1;
+                  }
            }
 
+
+
+           if(!color && !year && city!==' ')
+           {
+                 if (response.bikes[i].stolen_location === city)
+                 {
+                   output += JSON.stringify("Date Stolen: "+response.bikes[i].date_stolen+
+                                            "; Description: "+response.bikes[i].description +
+                                            "; Color: "+response.bikes[i].frame_colors+
+                                            "; City Stolen: "+response.bikes[i].stolen_location+
+                                            "; Manufacturer: "+response.bikes[i].manufacturer_name+
+                                            "; Year: " + response.bikes[i].year)+ "<br>"+"<br>";
+                  results += 1;
+                 }
+          }
+
+
+
+
+
+          }
         }
+
+        getElements();
       }
-      console.log(output);
-
-      getElements();
     }
-  }
 
-  request.open("GET", url, true);
-  request.send();
+    request.open("GET", url, true);
+    request.send();
 
-  const getElements = function()
-  {
-   $("#solution").html(output);
-  }
+    const getElements = function()
+    {
+     $("#solution").html(output);
+     $(".results").text(results);
+    }
   });
 });

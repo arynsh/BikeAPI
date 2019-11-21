@@ -6,11 +6,26 @@
     <title>Bike Index</title>
   </head>
   <body>
-    <form id="inputform">
-      <!-- <label for="goal">Enter a number:</label>
-      <input id="goal" type="number"> -->
-      <button type="submit">Submit</button>
-    </form>
+    <div class="container">
+      <div class="jumbotron"><h1>Bike API</h1></div>
+      <form id="formID" action="index.html" method="post">
+        <div class="form-group">
+          <label for="">Please enter color:</label><br>
+          <input type="text" id="colorID" class="form-control" value="">
+        </div>
+        <div class="form-group">
+          <label for="">Please enter city:</label><br>
+          <input type="text" id="cityID" class="form-control" value="">
+        </div>
+        <div class="form-group">
+          <label for="">Please enter year:</label><br>
+          <input type="text" id="yearID" class="form-control" value="">
+        </div>
+        <button type="submit" class="btn btn-success btn-lg btn-block" name="button">Submit</button>
+      </form>
+
+    </div>
     <div id="solution"></div>
+    <span class="results"></span>
   </body>
 </html>
